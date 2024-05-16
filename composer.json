@@ -1,0 +1,31 @@
+{
+    "name": "lybe/airbyte-connector",
+    "version": "1.0.0",
+    "type": "library",
+    "description": "Laravel package for connecting to Airbyte APIs",
+    "keywords": ["laravel", "framework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lakshay Pratap Singh Panwar",
+            "email": "lakshay.panwar@lybe.se"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "guzzlehttp/guzzle": "^7.0|^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lybe\\AirbyteConnector\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lybe\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
