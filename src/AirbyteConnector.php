@@ -1,8 +1,12 @@
 <?php
+/*
+ * Copyright © Lybe Sweden AB 2024
+ */
 
 namespace Lybe\AirbyteConnector;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 
 class AirbyteConnector
@@ -13,7 +17,7 @@ class AirbyteConnector
     {
         $this->client = new Client([
             'base_uri' => config('airbyte.host'), // Change this to your local Airbyte instance URI
-            'timeout'  => 10,
+            'timeout' => 10,
             'auth' => [config('airbyte.username'), config('airbyte.password')],
             'headers' => [
                 'Accept' => 'application/json',
@@ -22,104 +26,113 @@ class AirbyteConnector
         ]);
     }
 
-    // Fetch all workspaces
-    public function getWorkspaces()
+    public function getWorkspaces(): array
     {
         return $this->request('GET', 'workspaces');
     }
 
-    // Fetch a workspace by id
-    public function getWorkspaceById(string $workspaceId)
+    public function getWorkspaceById(string $workspaceId): array
     {
         return $this->request('GET', "workspaces/{$workspaceId}");
     }
 
-    // Create a new workspace
-    public function createWorkspace(array $data)
+    public function createWorkspace(array $data): array
     {
         return $this->request('POST', 'workspaces', $data);
     }
 
-    // Update a workspace
-    public function updateWorkspace(string $workspaceId, array $data)
+    public function updateWorkspace(string $workspaceId, array $data): array
     {
         return $this->request('PUT', "workspaces/{$workspaceId}", $data);
     }
 
-    // Delete a workspace
-    public function deleteWorkspace(string $workspaceId)
+    public function deleteWorkspace(string $workspaceId): void
     {
-        return $this->request('DELETE', "workspaces/{$workspaceId}");
+        $this->request('DELETE', "workspaces/{$workspaceId}");
     }
 
-    // Fetch all sources
-    public function getSources()
+    public function getSources(): array
     {
         return $this->request('GET', 'sources');
     }
 
-    // Fetch a source by id
-    public function getSourceById(string $sourceId)
+    public function getSourceById(string $sourceId): array
     {
         return $this->request('GET', "sources/{$sourceId}");
     }
 
-    // Create a new source
-    public function createSource(array $data)
+    public function createSource(array $data): array
     {
         return $this->request('POST', 'sources', $data);
     }
 
-    // Update a source
-    public function updateSource(string $sourceId, array $data)
+    public function updateSource(string $sourceId, array $data): array
     {
         return $this->request('PUT', "sources/{$sourceId}", $data);
     }
 
-    // Delete a source
-    public function deleteSource(string $sourceId)
+    public function deleteSource(string $sourceId): array
     {
         return $this->request('DELETE', "sources/{$sourceId}");
     }
 
-    // Fetch all destinations
-    public function getDestinations()
+    public function getDestinations(): array
     {
         return $this->request('GET', 'destinations');
     }
 
-    // Fetch a destination by id
-    public function getDestinationById(string $destinationId)
+    public function getDestinationById(string $destinationId): array
     {
         return $this->request('GET', "destinations/{$destinationId}");
     }
 
-    // Create a new destination
-    public function createDestination(array $data)
+    public function createDestination(array $data): array
     {
         return $this->request('POST', 'destinations', $data);
     }
 
-    // Update a destination
-    public function updateDestination(string $destinationId, array $data)
+    public function updateDestination(string $destinationId, array $data): array
     {
         return $this->request('PUT', "destinations/{$destinationId}", $data);
     }
 
-    // Delete a destination
-    public function deleteDestination(string $destinationId)
+    public function deleteDestination(string $destinationId): array
     {
         return $this->request('DELETE', "destinations/{$destinationId}");
     }
 
-    // General method to make API requests
-    protected function request($method, $endpoint, $data = [])
+    public function getConnections(): array
     {
-        try {
-            $response = $this->client->request($method, $endpoint, ['json' => $data]);
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $e) {
-            return ['error' => $e->getMessage()];
-        }
+        return $this->request('GET', 'connections');
+    }
+
+    public function getConnectionById(string $connectionId): array
+    {
+        return $this->request('GET', "connections/{$connectionId}");
+    }
+
+    public function createConnection(array $data): array
+    {
+        return $this->request('POST', 'connections', $data);
+    }
+
+    public function updateConnection(string $connectionId, array $data): array
+    {
+        return $this->request('PUT', "connections/{$connectionId}", $data);
+    }
+
+    public function deleteConnection(string $connectionId): array
+    {
+        return $this->request('DELETE', "connections/{$connectionId}");
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    protected function request($method, $endpoint, $data = []): array
+    {
+        $response = $this->client->request($method, $endpoint, ['json' => $data]);
+        return json_decode($response->getBody()->getContents(), true);
+
     }
 }

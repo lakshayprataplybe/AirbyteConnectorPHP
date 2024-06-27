@@ -1,4 +1,7 @@
 <?php
+/*
+ * Copyright © Lybe Sweden AB 2024
+ */
 
 namespace Lybe\AirbyteConnector\Facades;
 
